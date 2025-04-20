@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personality Temperament Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Intro Section -->
+    <div id="intro" class="intro">
+      <h1>Personality Temperament Test</h1>
+      <p>This test helps assess your temperament of potential strengths and weaknesses.  The test takes about 45 minutes to complete.  There are 4 sections.  In each section you will find a series of descriptive words.  Your job is to read each word and put a number next to it according to how well it describes the REAL you.<br/>Each question is rated from 1 to 5:</p>
+      <ul>
+        <li>1 = Definitely NOT me</li>
+        <li>2 = Usually NOT me</li>
+        <li>3 = Usually me</li>
+        <li>4 = Mostly me</li>
+        <li>5 = Definitely me</li>
+      </ul>
+      <p>It's important that you be honest and objective.<br/>Don't answer according to how you want to be or don't want to be.<br/>BE COMPLETELY 100% HONEST WITH YOURSELF...BE RAW ABOUT WHO YOU ARE RIGHT NOW AT THIS POINT IN YOUR LIFE.</p>
+      <button id="start-btn">Start Survey</button>
+    </div>
+
+    <!-- Survey Form Section -->
+    <form id="survey-form" class="hidden">
+      <div class="scoring-reminder">
+        <h2>Scoring Reminder</h2>
+        <p>Each question is rated from 1 to 5:</p>
+        <ul>
+          <li>1 = Definitely NOT me</li>
+          <li>2 = Usually NOT me</li>
+          <li>3 = Usually me</li>
+          <li>4 = Mostly me</li>
+          <li>5 = Definitely me</li>
+        </ul>
+        <p><strong>Remember honest and objective.</strong></p>
+      </div>
+      <div id="questions"></div>
+    </form>
+
+
+    <!-- Result Section -->
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
