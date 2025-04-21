@@ -89,3 +89,20 @@ button {
 .scoring-reminder h2 {
   margin-top: 0;
 }
+
+#progress-container {
+  width: 100%;
+  background-color: #eee;
+  height: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0;
+  background-color: #0077cc;
+  transition: width 0.4s ease;
+}
+

@@ -1,18 +1,52 @@
 const sections = [
   {
-    title: "Product Experience",
+    title: "Section 1",
     questions: [
-      "How satisfied are you with our product?",
-      "How likely are you to recommend us?",
-      "How would you rate the product quality?"
+      "Emotional",
+      "Egotistical",
+      "Interrupts others",
+      "Compassionate",
+      "Impulsive",
+      "Disorganized",
+      "Impractical",
+      "Funny",
+      "Forgetful",
+      "Easily discouraged",
+      "Very positive",
+      "Easily angered",
+      "Undisciplined",
+      "Extrovert",
+      "Refreshing",
+      "Lively/spirited",
+      "Weak-willed",
+      "Spontaneuous",
+      "Talkative",
+      "Delightful/cheerful",
+      "Enjoyable",
+      "Popular",
+      "Friendly/Sociable",
+      "\"Bouncy\"",
+      "Restless",
+      "Difficulty concentrating",
+      "Likes to play",
+      "Difficulty keeping resolutions",
+      "Lives in present",
+      "Difficulty with appointments"
     ]
   },
   {
-    title: "Website Experience",
+    title: "Section 2",
     questions: [
-      "How easy was it to navigate our site?",
-      "How would you rate the checkout process?",
-      "How satisfied are you with pricing?"
+      "Optimistic",
+      "Determined",
+      "Bossy",
+      "Goal-oriented",
+      "Decisive",
+      "Frank",
+      "Self-confident",
+      "Sarcastic",
+      "Workaholic",
+      "Self-sufficient"
     ]
   },
   {
@@ -30,6 +64,13 @@ const sections = [
     ]
   }
 ];
+
+document.getElementById("start-btn").addEventListener("click", () => {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("survey-form").classList.remove("hidden");
+  document.getElementById("progress-container").classList.remove("hidden");
+  buildSurvey();
+});
 
 let currentSection = 0;
 
@@ -83,7 +124,15 @@ function showSection(index) {
     sec.classList.toggle("hidden", i !== index);
   });
   currentSection = index;
+  updateProgressBar(index);
 }
+
+function updateProgressBar(sectionIndex) {
+  const total = sections.length;
+  const percent = ((sectionIndex + 1) / total) * 100;
+  document.getElementById("progress-bar").style.width = `${percent}%`;
+}
+
 
 function goToSection(index) {
   if (!validateSection(currentSection)) {
