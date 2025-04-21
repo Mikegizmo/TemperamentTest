@@ -1,1 +1,0 @@
-# Temperament Test
