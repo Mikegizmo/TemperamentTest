@@ -1,66 +1,146 @@
 const sections = [
   {
     title: "Section 1",
+    type: "Sanguine",
     questions: [
       "Emotional",
       "Egotistical",
       "Interrupts others",
       "Compassionate",
       "Impulsive",
-      "Disorganized",
-      "Impractical",
-      "Funny",
-      "Forgetful",
-      "Easily discouraged",
-      "Very positive",
-      "Easily angered",
-      "Undisciplined",
-      "Extrovert",
-      "Refreshing",
-      "Lively/spirited",
-      "Weak-willed",
-      "Spontaneuous",
-      "Talkative",
-      "Delightful/cheerful",
-      "Enjoyable",
-      "Popular",
-      "Friendly/Sociable",
-      "\"Bouncy\"",
-      "Restless",
-      "Difficulty concentrating",
-      "Likes to play",
-      "Difficulty keeping resolutions",
-      "Lives in present",
-      "Difficulty with appointments"
+      // "Disorganized",
+      // "Impractical",
+      // "Funny",      
+      // "Forgetful",
+      // "Easily discouraged",
+      // "Very positive",
+      // "Easily angered",
+      // "Undisciplined",
+      // "Extrovert",
+      // "Refreshing",
+      // "Lively/spirited",
+      // "Weak-willed",
+      // "Spontaneuous",
+      // "Talkative",
+      // "Delightful/cheerful",
+      // "Enjoyable",
+      // "Popular",
+      // "Friendly/Sociable",
+      // "\"Bouncy\"",
+      // "Restless",
+      // "Difficulty concentrating",
+      // "Likes to play",
+      // "Difficulty keeping resolutions",
+      // "Lives in present",
+      // "Difficulty with appointments"
     ]
   },
   {
     title: "Section 2",
+    type: "Choleric",
     questions: [
       "Optimistic",
       "Determined",
       "Bossy",
       "Goal-oriented",
       "Decisive",
-      "Frank",
-      "Self-confident",
-      "Sarcastic",
-      "Workaholic",
-      "Self-sufficient"
+      // "Frank",
+      // "Self-confident",
+      // "Sarcastic",
+      // "Workaholic",
+      // "Self-sufficient",
+      // "Practical",
+      // "Headstrong",
+      // "Activist",
+      // "Outgoing",
+      // "Domineering",
+      // "Adventurous",
+      // "Aggressive",
+      // "Competitive",
+      // "Leadership ability",
+      // "Daring",
+      // "Persevering",
+      // "Bold",
+      // "Strong-willed",
+      // "Persuasive",
+      // "Hot-tempered",
+      // "Resourceful",
+      // "Insensitive",
+      // "Outspoken",
+      // "Unsympathetic",
+      // "Productive"
     ]
   },
   {
-    title: "Customer Support",
+    title: "Section 3",
+    type: "Melancholy",
     questions: [
-      "How helpful was our support?",
-      "How satisfied are you with the delivery time?"
+      "Deep feeling",
+      "Critical",
+      "Insecure",
+      "Sensitive",
+      "Indecisive",
+      // "Hard to please",
+      // "Self-centered",
+      // "Pessimistic",
+      // "Depressed easily",
+      // "Easily offended",
+      // "Idealistic",
+      // "Loner",
+      // "Self-sacrificing",
+      // "Introvert",
+      // "Faithful friend",
+      // "Analytical",
+      // "Considerate",
+      // "Likes behind the scenes",
+      // "Suspicious",
+      // "Respectful",
+      // "Introspective",
+      // "Planner",
+      // "Perfectionist",
+      // "Scheduled",
+      // "Unforgiving/resents",
+      // "Orderly",
+      // "Creative",
+      // "Detailed",
+      // "Moody",
+      // "Gifted(musically or athletically)"
     ]
   },
   {
-    title: "Overall Satisfaction",
+    title: "Section 3",
+    type: "Phlegmatic",
     questions: [
-      "How likely are you to buy again?",
-      "Overall experience with us?"
+      "Very quiet",
+      "Selfish",
+      "Unenthusiastic",
+      "Negative",
+      "Regular daily habits",
+      // "Hesitant",
+      // "Shy",
+      // "Stingy",
+      // "Aimless",
+      // "Not aggressive",
+      // "Stubborn",
+      // "Worrier",
+      // "Spectator of life",
+      // "Works well under pressure",
+      // "Indecisive",
+      // "Adaptable",
+      // "Slow and lazy",
+      // "Submissive to others",
+      // "Easy going",
+      // "Reserved",
+      // "Calm and cool",
+      // "Content/satisfied",
+      // "Efficient",
+      // "Patient",
+      // "Dependable",
+      // "Listener",
+      // "Witty/dry humor",
+      // "Pleasant",
+      // "Teases others",
+      // "Consistent"
     ]
   }
 ];
@@ -158,6 +238,43 @@ function validateSection(sectionIndex) {
   );
 }
 
+// function handleSubmit() {
+//   if (!validateSection(currentSection)) {
+//     alert("Please answer all questions in this section before submitting.");
+//     return;
+//   }
+
+//   let globalIndex = 0;
+//   let scores = [];
+//   const resultEl = document.getElementById("result");
+//   resultEl.innerHTML = "";
+
+//   sections.forEach((section) => {
+//     let sectionScore = 0;
+//     section.questions.forEach(() => {
+//       const selected = document.querySelector(`input[name="q${globalIndex}"]:checked`);
+//       const value = parseInt(selected.value, 10);
+//       if (value > 2) sectionScore += value;
+//       globalIndex++;
+//     });
+//     scores.push(sectionScore);
+//   });
+
+//   scores.forEach((score, i) => {
+//     const p = document.createElement("p");
+//     p.textContent = `${sections[i].title} Score: ${score}`;
+//     resultEl.appendChild(p);
+//   });
+
+//   const total = scores.reduce((a, b) => a + b, 0);
+//   const totalEl = document.createElement("p");
+//   totalEl.innerHTML = `<strong>Total Score: ${total}</strong>`;
+//   resultEl.appendChild(totalEl);
+
+//   // Hide the form
+//   document.getElementById("survey-form").classList.add("hidden");
+//   resultEl.scrollIntoView({ behavior: "smooth" });
+// }
 function handleSubmit() {
   if (!validateSection(currentSection)) {
     alert("Please answer all questions in this section before submitting.");
@@ -177,24 +294,30 @@ function handleSubmit() {
       if (value > 2) sectionScore += value;
       globalIndex++;
     });
-    scores.push(sectionScore);
+    scores.push({ type: section.type, score: sectionScore });
   });
 
-  scores.forEach((score, i) => {
+  // Sort sections from highest to lowest score
+  scores.sort((a, b) => b.score - a.score);
+
+  // Display sorted section scores with labels
+  scores.forEach(({ type, score }) => {
     const p = document.createElement("p");
-    p.textContent = `${sections[i].title} Score: ${score}`;
+    p.textContent = `${type} Score: ${score}`;
     resultEl.appendChild(p);
   });
 
-  const total = scores.reduce((a, b) => a + b, 0);
+  const total = scores.reduce((sum, item) => sum + item.score, 0);
   const totalEl = document.createElement("p");
   totalEl.innerHTML = `<strong>Total Score: ${total}</strong>`;
   resultEl.appendChild(totalEl);
 
-  // Hide the form
+  // Hide the form and progress bar
   document.getElementById("survey-form").classList.add("hidden");
+  document.getElementById("progress-container").classList.add("hidden");
   resultEl.scrollIntoView({ behavior: "smooth" });
 }
+
 
 document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById("intro").classList.add("hidden");
