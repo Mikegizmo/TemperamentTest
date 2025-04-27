@@ -300,24 +300,45 @@ function handleSubmit() {
   // Sort sections from highest to lowest score
   scores.sort((a, b) => b.score - a.score);
 
-  // Display sorted section scores with labels
+  // Display sorted section scores
   scores.forEach(({ type, score }) => {
     const p = document.createElement("p");
     p.textContent = `${type} Score: ${score}`;
     resultEl.appendChild(p);
   });
 
-  const total = scores.reduce((sum, item) => sum + item.score, 0);
-  const totalEl = document.createElement("p");
-  totalEl.innerHTML = `<strong>Total Score: ${total}</strong>`;
-  resultEl.appendChild(totalEl);
+  // Calculate final temperament based on top two
+  const top = scores[0].type.toLowerCase();
+  const second = scores[1].type.toLowerCase();
+  let temperament = "";
+
+  const combinations = {
+    "sanguine_choleric": "SanChlor",
+    "sanguine_melancholy": "SanMel",
+    "sanguine_phlegmatic": "SanPhleg",
+    "choleric_sanguine": "ChlorSan",
+    "choleric_melancholy": "ChlorMel",
+    "choleric_phlegmatic": "ChlorPhleg",
+    "melancholy_sanguine": "MelSan",
+    "melancholy_choleric": "MelChlor",
+    "melancholy_phlegmatic": "MelPhleg",
+    "phlegmatic_sanguine": "PhlegSan",
+    "phlegmatic_choleric": "PhlegChlor",
+    "phlegmatic_melancholy": "PhlegMel"
+  };
+
+  const key = `${top}_${second}`;
+  temperament = combinations[key] || "Unknown Combination";
+
+  const temperamentEl = document.createElement("h2");
+  temperamentEl.innerHTML = `Your combined temperament is: <strong>${temperament}</strong>`;
+  resultEl.appendChild(temperamentEl);
 
   // Hide the form and progress bar
   document.getElementById("survey-form").classList.add("hidden");
   document.getElementById("progress-container").classList.add("hidden");
   resultEl.scrollIntoView({ behavior: "smooth" });
 }
-
 
 document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById("intro").classList.add("hidden");
