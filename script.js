@@ -1,3 +1,12 @@
+let temperamentDescriptions = {};
+
+fetch('temperamentDescriptions.json')
+  .then(response => response.json())
+  .then(data => {
+    temperamentDescriptions = data;
+  })
+  .catch(error => console.error("Error loading descriptions:", error));
+
 const sections = [
   {
     title: "Section 1",
@@ -238,43 +247,6 @@ function validateSection(sectionIndex) {
   );
 }
 
-// function handleSubmit() {
-//   if (!validateSection(currentSection)) {
-//     alert("Please answer all questions in this section before submitting.");
-//     return;
-//   }
-
-//   let globalIndex = 0;
-//   let scores = [];
-//   const resultEl = document.getElementById("result");
-//   resultEl.innerHTML = "";
-
-//   sections.forEach((section) => {
-//     let sectionScore = 0;
-//     section.questions.forEach(() => {
-//       const selected = document.querySelector(`input[name="q${globalIndex}"]:checked`);
-//       const value = parseInt(selected.value, 10);
-//       if (value > 2) sectionScore += value;
-//       globalIndex++;
-//     });
-//     scores.push(sectionScore);
-//   });
-
-//   scores.forEach((score, i) => {
-//     const p = document.createElement("p");
-//     p.textContent = `${sections[i].title} Score: ${score}`;
-//     resultEl.appendChild(p);
-//   });
-
-//   const total = scores.reduce((a, b) => a + b, 0);
-//   const totalEl = document.createElement("p");
-//   totalEl.innerHTML = `<strong>Total Score: ${total}</strong>`;
-//   resultEl.appendChild(totalEl);
-
-//   // Hide the form
-//   document.getElementById("survey-form").classList.add("hidden");
-//   resultEl.scrollIntoView({ behavior: "smooth" });
-// }
 function handleSubmit() {
   if (!validateSection(currentSection)) {
     alert("Please answer all questions in this section before submitting.");
@@ -288,25 +260,34 @@ function handleSubmit() {
 
   sections.forEach((section) => {
     let sectionScore = 0;
+    let index = 0;
     section.questions.forEach(() => {
       const selected = document.querySelector(`input[name="q${globalIndex}"]:checked`);
       const value = parseInt(selected.value, 10);
       if (value > 2) sectionScore += value;
       globalIndex++;
+      index++;
     });
-    scores.push({ type: section.type, score: sectionScore });
+    scores.push({ index: index, type: section.type, score: sectionScore });
   });
 
   // Sort sections from highest to lowest score
   scores.sort((a, b) => b.score - a.score);
 
-  // Display sorted section scores
-  scores.forEach(({ type, score }) => {
-    const p = document.createElement("p");
-    p.textContent = `${type} Score: ${score}`;
-    resultEl.appendChild(p);
+  // // Display sorted section scores
+  // scores.forEach(({ type, score }) => {
+  //   const p = document.createElement("p");
+  //   p.textContent = `${type} Score: ${score}`;
+  //   resultEl.appendChild(p);
+  // });
+  scores.forEach(({ index, type, score }) => {
+    const div = document.createElement("div");
+    div.className = "score-item";
+    div.innerHTML = `${type}: ${score}`;
+    div.style.animationDelay = `${index * 0.2}s`; // Cascade the scores too
+    resultEl.appendChild(div);
   });
-
+  
   // Calculate final temperament based on top two
   const top = scores[0].type.toLowerCase();
   const second = scores[1].type.toLowerCase();
@@ -330,9 +311,46 @@ function handleSubmit() {
   const key = `${top}_${second}`;
   temperament = combinations[key] || "Unknown Combination";
 
-  const temperamentEl = document.createElement("h2");
-  temperamentEl.innerHTML = `Your combined temperament is: <strong>${temperament}</strong>`;
-  resultEl.appendChild(temperamentEl);
+  setTimeout(() => {
+    const temperamentEl = document.createElement("h2");
+    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong>`;
+    resultEl.appendChild(temperamentEl);
+
+    // Create the 'Get Profile' button
+    const getProfileButton = document.createElement("button");
+    getProfileButton.textContent = "Get Profile";
+    getProfileButton.className = "get-profile-btn"; // for styling
+    resultEl.appendChild(getProfileButton);
+
+    // When the button is clicked, show the detailed paragraphs
+    getProfileButton.addEventListener("click", () => {
+      // Show loading spinner
+      getProfileButton.innerHTML = `<div class="spinner"></div> Loading...`;
+      getProfileButton.disabled = true; // Disable the button so user can't click again
+    
+      setTimeout(() => {
+        // After short delay, show the description paragraphs
+        showTemperamentDescription(temperament);
+        getProfileButton.remove(); // Remove the button after loading done
+      }, 1000); // 1 second delay
+    });
+
+  }, 1000); // <-- 1 second delay after scores finish animating
+  
+
+  function showTemperamentDescription(temperament) {
+    const descriptionParagraphs = temperamentDescriptions[temperament];
+
+    if (descriptionParagraphs && descriptionParagraphs.length > 0) {
+      const numberOfScores = scores.length || 4; // Normally 4 sections
+      descriptionParagraphs.forEach((text, index) => {
+        const p = document.createElement("p");
+        p.textContent = text;
+        p.style.animationDelay = `${(numberOfScores * 0.2) + (index * 0.2)}s`;
+        resultEl.appendChild(p);
+      });
+    } 
+  } 
 
   // Hide the form and progress bar
   document.getElementById("survey-form").classList.add("hidden");
