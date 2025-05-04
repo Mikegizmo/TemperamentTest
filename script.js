@@ -318,6 +318,7 @@ function handleSubmit() {
 
   setTimeout(() => {
     const temperamentEl = document.createElement("h2");
+    temperamentEl.className = "temperament-title";
     temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong>(${topCap}/${secondCap})`;
     resultEl.appendChild(temperamentEl);
 
@@ -350,11 +351,19 @@ function handleSubmit() {
       const numberOfScores = scores.length || 4; // Normally 4 sections
       descriptionParagraphs.forEach((text, index) => {
         const p = document.createElement("p");
+        p.className = "description-paragraph";
         p.textContent = text;
         p.style.animationDelay = `${(numberOfScores * 0.2) + (index * 0.2)}s`;
         resultEl.appendChild(p);
       });
     } 
+
+    const downloadBtn = document.createElement("button");
+    downloadBtn.textContent = "Download PDF";
+    downloadBtn.className = "download-pdf-btn";
+    resultEl.appendChild(downloadBtn);
+
+    downloadBtn.addEventListener("click", generatePDF);
   } 
 
   // Hide the form and progress bar
@@ -368,3 +377,62 @@ document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById("survey-form").classList.remove("hidden");
   buildSurvey();
 });
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const today = new Date();
+  const dateString = today.toLocaleDateString();
+
+  // Title & Date
+  doc.setFontSize(18);
+  doc.text("Temperament Survey Results", 20, 20);
+  doc.setFontSize(12);
+  doc.text(`Date Taken: ${dateString}`, 20, 30);
+
+  // Get Temperament
+  const temperamentTitle = document.querySelector(".temperament-title");
+  if (temperamentTitle) {
+    doc.setFontSize(14);
+    doc.text(`${temperamentTitle.textContent}`, 20, 45);
+  }
+
+  // Get Section Scores (if visible on page)
+  const scoreItems = document.querySelectorAll(".score-item");
+  let y = 55;
+  if (scoreItems.length > 0) {
+    doc.setFontSize(12);
+    doc.text("Section Scores:", 20, y);
+    y += 7;
+    scoreItems.forEach((item) => {
+      doc.text(`• ${item.textContent}`, 25, y);
+      y += 7;
+    });
+    y += 5;
+  }
+
+  // Get Description Paragraphs
+  const paragraphs = document.querySelectorAll(".description-paragraph");
+  if (paragraphs.length > 0) {
+    doc.setFontSize(12);
+    doc.text("Temperament Profile:", 20, y);
+    y += 10;
+
+    paragraphs.forEach((p) => {
+      const lines = doc.splitTextToSize(p.textContent.trim(), 170);
+      if (y + lines.length * 7 > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(lines, 20, y);
+      y += lines.length * 7 + 5;
+    });
+  } else {
+    doc.text("Profile details not available yet.", 20, y);
+  }
+
+  // Save PDF
+  const fileName = `temperament_results_${dateString.replace(/\//g, "-")}.pdf`;
+  doc.save(fileName);
+}
