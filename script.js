@@ -117,7 +117,7 @@ const sections = [
     ]
   },
   {
-    title: "Section 3",
+    title: "Section 4",
     type: "Phlegmatic",
     questions: [
       "Very quiet",
@@ -275,11 +275,6 @@ function handleSubmit() {
   scores.sort((a, b) => b.score - a.score);
 
   // // Display sorted section scores
-  // scores.forEach(({ type, score }) => {
-  //   const p = document.createElement("p");
-  //   p.textContent = `${type} Score: ${score}`;
-  //   resultEl.appendChild(p);
-  // });
   scores.forEach(({ index, type, score }) => {
     const div = document.createElement("div");
     div.className = "score-item";
@@ -388,19 +383,19 @@ async function generatePDF() {
   // Title & Date
   doc.setFontSize(18);
   doc.text("Temperament Survey Results", 20, 20);
-  doc.setFontSize(12);
-  doc.text(`Date Taken: ${dateString}`, 20, 30);
+  doc.setFontSize(14);
+  doc.text(`Date Taken: ${dateString}`, 130, 20);
 
   // Get Temperament
   const temperamentTitle = document.querySelector(".temperament-title");
   if (temperamentTitle) {
-    doc.setFontSize(14);
-    doc.text(`${temperamentTitle.textContent}`, 20, 45);
+    doc.setFontSize(16);
+    doc.text(`${temperamentTitle.textContent}`, 20, 30);
   }
 
   // Get Section Scores (if visible on page)
   const scoreItems = document.querySelectorAll(".score-item");
-  let y = 55;
+  let y = 40;
   if (scoreItems.length > 0) {
     doc.setFontSize(12);
     doc.text("Section Scores:", 20, y);
@@ -426,7 +421,7 @@ async function generatePDF() {
         y = 20;
       }
       doc.text(lines, 20, y);
-      y += lines.length * 7 + 5;
+      y += lines.length * 5 + 8;
     });
   } else {
     doc.text("Profile details not available yet.", 20, y);
