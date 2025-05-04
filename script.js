@@ -311,9 +311,14 @@ function handleSubmit() {
   const key = `${top}_${second}`;
   temperament = combinations[key] || "Unknown Combination";
 
+  // Capitalizing first letter of temperaments
+  const topCap = top.charAt(0).toUpperCase() + top.slice(1);
+  const secondCap = second.charAt(0).toUpperCase() + second.slice(1);
+  
+
   setTimeout(() => {
     const temperamentEl = document.createElement("h2");
-    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong>`;
+    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong>(${topCap}/${secondCap})`;
     resultEl.appendChild(temperamentEl);
 
     // Create the 'Get Profile' button
