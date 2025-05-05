@@ -314,7 +314,7 @@ function handleSubmit() {
   setTimeout(() => {
     const temperamentEl = document.createElement("h2");
     temperamentEl.className = "temperament-title";
-    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong>(${topCap}/${secondCap})`;
+    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong> (${topCap}/${secondCap})`;
     resultEl.appendChild(temperamentEl);
 
     // Create the 'Get Profile' button
