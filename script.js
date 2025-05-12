@@ -209,11 +209,13 @@ function buildSurvey() {
 }
 
 function showSection(index) {
+
   document.querySelectorAll(".survey-section").forEach((sec, i) => {
     sec.classList.toggle("hidden", i !== index);
   });
   currentSection = index;
   updateProgressBar(index);
+  window.scrollTo(0, 0);
 }
 
 function updateProgressBar(sectionIndex) {
