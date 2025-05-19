@@ -200,9 +200,20 @@ function buildSurvey() {
     btn.addEventListener("click", () =>
       sectionIndex === sections.length - 1 ? handleSubmit() : goToSection(sectionIndex + 1)
     );
-    sectionDiv.appendChild(btn);
+
+    const saveBtn = document.createElement("button");
+    saveBtn.textContent = "Save Progress";
+    saveBtn.className = "save-progress-btn";
+
+    const buttonDiv = document.createElement('div');
+    buttonDiv.className = 'button-div';
+    buttonDiv.appendChild(btn);
+    buttonDiv.appendChild(saveBtn);
+
+    sectionDiv.appendChild(buttonDiv);
     questionContainer.appendChild(sectionDiv);
-  });
+
+    });
 
   // Show the first section
   showSection(0);
@@ -233,6 +244,22 @@ function goToSection(index) {
   showSection(index);
 }
 
+function saveProgress() {
+  const answers = [];
+
+  // Loop through questions in all visible/previous sections
+  document.querySelectorAll(".question").forEach((q) => {
+    const selected = q.querySelector("input[type='radio']:checked");
+    answers.push(selected ? selected.value : null);
+  });
+
+  localStorage.setItem("surveyProgress", JSON.stringify({
+    answers,
+    currentSection: currentSection,
+    timestamp: new Date().toISOString()
+  }));
+}
+
 function getGlobalQuestionIndex(sectionIndex, qIndex) {
   return sections
     .slice(0, sectionIndex)
@@ -254,6 +281,8 @@ function handleSubmit() {
     alert("Please answer all questions in this section before submitting.");
     return;
   }
+
+  localStorage.removeItem("surveyProgress");
 
   let globalIndex = 0;
   let scores = [];
