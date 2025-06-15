@@ -1,4 +1,7 @@
+let currentSectionIndex = 0;
 let temperamentDescriptions = {};
+let temperamentSummaries = {};
+const profileDiv = document.getElementById("profile");
 
 fetch('temperamentDescriptions.json')
   .then(response => response.json())
@@ -7,7 +10,14 @@ fetch('temperamentDescriptions.json')
   })
   .catch(error => console.error("Error loading descriptions:", error));
 
-const sections = [
+fetch('temperamentSummaries.json')
+  .then(response => response.json())
+  .then(data => {
+    temperamentSummaries = data;
+  })
+  .catch(error => console.error("Error loading summaries:", error));
+
+const temperamentSections = [
   {
     title: "Section 1",
     type: "Sanguine",
@@ -15,13 +25,13 @@ const sections = [
       "Emotional",
       "Egotistical",
       "Interrupts others",
-      "Compassionate",
-      "Impulsive",
-      "Disorganized",
-      "Impractical",
-      "Funny",      
-      "Forgetful",
-      "Easily discouraged",
+      // "Compassionate",
+      // "Impulsive",
+      // "Disorganized",
+      // "Impractical",
+      // "Funny",      
+      // "Forgetful",
+      // "Easily discouraged",
       // "Very positive",
       // "Easily angered",
       // "Undisciplined",
@@ -51,13 +61,13 @@ const sections = [
       "Optimistic",
       "Determined",
       "Bossy",
-      "Goal-oriented",
-      "Decisive",
-      "Frank",
-      "Self-confident",
-      "Sarcastic",
-      "Workaholic",
-      "Self-sufficient",
+      // "Goal-oriented",
+      // "Decisive",
+      // "Frank",
+      // "Self-confident",
+      // "Sarcastic",
+      // "Workaholic",
+      // "Self-sufficient",
       // "Practical",
       // "Headstrong",
       // "Activist",
@@ -87,13 +97,13 @@ const sections = [
       "Deep feeling",
       "Critical",
       "Insecure",
-      "Sensitive",
-      "Indecisive",
-      "Hard to please",
-      "Self-centered",
-      "Pessimistic",
-      "Depressed easily",
-      "Easily offended",
+      // "Sensitive",
+      // "Indecisive",
+      // "Hard to please",
+      // "Self-centered",
+      // "Pessimistic",
+      // "Depressed easily",
+      // "Easily offended",
       // "Idealistic",
       // "Loner",
       // "Self-sacrificing",
@@ -123,13 +133,13 @@ const sections = [
       "Very quiet",
       "Selfish",
       "Unenthusiastic",
-      "Negative",
-      "Regular daily habits",
-      "Hesitant",
-      "Shy",
-      "Stingy",
-      "Aimless",
-      "Not aggressive",
+      // "Negative",
+      // "Regular daily habits",
+      // "Hesitant",
+      // "Shy",
+      // "Stingy",
+      // "Aimless",
+      // "Not aggressive",
       // "Stubborn",
       // "Worrier",
       // "Spectator of life",
@@ -154,170 +164,246 @@ const sections = [
   }
 ];
 
-document.getElementById("start-btn").addEventListener("click", () => {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("survey-form").classList.remove("hidden");
-  document.getElementById("progress-container").classList.remove("hidden");
-  buildSurvey();
-});
-
-let currentSection = 0;
-
 function buildSurvey() {
-  const questionContainer = document.getElementById("questions");
-  questionContainer.innerHTML = "";
+  const container = document.getElementById("surveyContainer");
+  container.innerHTML = ""; // Clear
+  updateProgressBar(currentSectionIndex);
 
-  sections.forEach((section, sectionIndex) => {
+  temperamentSections.forEach((section, sIndex) => {
     const sectionDiv = document.createElement("div");
-    sectionDiv.className = "survey-section hidden";
-    sectionDiv.dataset.section = sectionIndex;
+    sectionDiv.className = "section";
+    if (sIndex !== 0) sectionDiv.style.display = "none";
 
-    const title = document.createElement("h3");
-    title.textContent = section.title;
-    sectionDiv.appendChild(title);
+    const header = document.createElement("h3");
+    header.textContent = section.title;
+    sectionDiv.appendChild(header);
 
-    section.questions.forEach((q, qIndex) => {
-      const globalIndex = getGlobalQuestionIndex(sectionIndex, qIndex);
-      const questionDiv = document.createElement("div");
-      questionDiv.className = "question";
-      questionDiv.innerHTML = `
-        <label for="q${globalIndex}">${globalIndex + 1}. ${q}</label>
-        <div class="rating">
-          ${[1, 2, 3, 4, 5]
-            .map(
-              (num) =>
-                `<label><input type="radio" name="q${globalIndex}" value="${num}" required /> ${num}</label>`
-            )
-            .join("")}
-        </div>
-      `;
-      sectionDiv.appendChild(questionDiv);
+    section.questions.forEach((question, qIndex) => {
+      const qDiv = document.createElement("div");
+      qDiv.className = "question";
+      qDiv.innerHTML = `<p>${question}</p>`;
+      for (let i = 1; i <= 5; i++) {
+        qDiv.innerHTML += `
+          <input type="radio" name="q${sIndex}_${qIndex}" value="${i}"> ${i}
+        `;
+      }
+      sectionDiv.appendChild(qDiv);
     });
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = sectionIndex === sections.length - 1 ? "Submit" : "Next Section";
-    btn.addEventListener("click", () =>
-      sectionIndex === sections.length - 1 ? handleSubmit() : goToSection(sectionIndex + 1)
-    );
+    // Add Save Progress button (not on last section)
+    if (sIndex !== temperamentSections.length - 1) {
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Save Progress";
+      saveBtn.className = "save-progress-btn";
+      saveBtn.addEventListener("click", () => {
+        saveProgress();
+        alert("Progress saved!");
+      });
+      sectionDiv.appendChild(saveBtn);
+    }
 
-    const saveBtn = document.createElement("button");
-    saveBtn.textContent = "Save Progress";
-    saveBtn.className = "save-progress-btn";
+    // Next Section button
+    if (sIndex < temperamentSections.length - 1) {
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Next Section";
+      nextBtn.className = "next-section-btn";
+      nextBtn.addEventListener("click", () => {
+        const currentSection = document.querySelectorAll(".section")[currentSectionIndex];
+        const questions = currentSection.querySelectorAll(".question");
 
-    const buttonDiv = document.createElement('div');
-    buttonDiv.className = 'button-div';
-    buttonDiv.appendChild(btn);
-    buttonDiv.appendChild(saveBtn);
+        let allAnswered = true;
+        questions.forEach(question => {
+          const selected = question.querySelector("input[type='radio']:checked");
+          if (!selected) {
+            allAnswered = false;
+            question.classList.add("unanswered");
+          } else {
+            question.classList.remove("unanswered");
+          }
+        });
 
-    sectionDiv.appendChild(buttonDiv);
-    questionContainer.appendChild(sectionDiv);
+        if (!allAnswered) {
+          alert("Please answer all questions in this section before proceeding.");
+          return;
+        }
 
-    });
+        currentSectionIndex++;
+        showSection(currentSectionIndex);
+        window.scrollTo(0, 0);
+      });
+      sectionDiv.appendChild(nextBtn);
+    }
 
-  // Show the first section
-  showSection(0);
+    if (sIndex === temperamentSections.length - 1) {
+      const submitBtn = document.createElement("button");
+      submitBtn.textContent = "Submit Survey";
+      submitBtn.className = "submit-survey-btn";
+      submitBtn.addEventListener("click", () => {
+        const currentSection = document.querySelectorAll(".section")[currentSectionIndex];
+        const questions = currentSection.querySelectorAll(".question");
+
+        let allAnswered = true;
+        questions.forEach(question => {
+          const selected = question.querySelector("input[type='radio']:checked");
+          if (!selected) {
+            allAnswered = false;
+            question.classList.add("unanswered");
+          } else {
+            question.classList.remove("unanswered");
+          }
+        });
+
+        if (!allAnswered) {
+          alert("Please answer all questions in this section before submitting.");
+          return;
+        }
+
+        showResults();
+        window.scrollTo(0, 0);
+      });
+
+      sectionDiv.appendChild(submitBtn);
+    }
+
+    container.appendChild(sectionDiv);
+  });
+
+  // Resume if saved progress exists
+  const saved = localStorage.getItem("surveyProgress");
+  if (saved) {
+    loadProgress(JSON.parse(saved));
+  }
 }
 
 function showSection(index) {
-
-  document.querySelectorAll(".survey-section").forEach((sec, i) => {
-    sec.classList.toggle("hidden", i !== index);
+  const sections = document.querySelectorAll(".section");
+  sections.forEach((section, i) => {
+    section.style.display = i === index ? "block" : "none";
+    const saveBtn = section.querySelector(".save-progress-btn");
+    if (saveBtn) {
+      saveBtn.style.display = (i === sections.length - 1) ? "none" : "inline-block";
+    }
   });
-  currentSection = index;
   updateProgressBar(index);
-  window.scrollTo(0, 0);
 }
 
-function updateProgressBar(sectionIndex) {
-  const total = sections.length;
-  const percent = ((sectionIndex + 1) / total) * 100;
+function updateProgressBar(currentSectionIndex) {
+  const total = temperamentSections.length;
+  const percent = ((currentSectionIndex + 1) / total) * 100;
   document.getElementById("progress-bar").style.width = `${percent}%`;
 }
 
-
-function goToSection(index) {
-  if (!validateSection(currentSection)) {
-    alert("Please answer all questions in this section before continuing.");
-    return;
-  }
-  showSection(index);
-}
-
 function saveProgress() {
-  const answers = [];
+  const allQuestions = Array.from(document.querySelectorAll(".section"))
+    .flatMap(section => Array.from(section.querySelectorAll(".question")));
 
-  // Loop through questions in all visible/previous sections
-  document.querySelectorAll(".question").forEach((q) => {
+  const answers = allQuestions.map(q => {
     const selected = q.querySelector("input[type='radio']:checked");
-    answers.push(selected ? selected.value : null);
+    return selected ? selected.value : null;
   });
 
   localStorage.setItem("surveyProgress", JSON.stringify({
     answers,
-    currentSection: currentSection,
+    currentSection: currentSectionIndex,
     timestamp: new Date().toISOString()
   }));
 }
 
-function getGlobalQuestionIndex(sectionIndex, qIndex) {
-  return sections
-    .slice(0, sectionIndex)
-    .reduce((total, sec) => total + sec.questions.length, 0) + qIndex;
+function loadProgress(data) {
+  const allQuestions = Array.from(document.querySelectorAll(".section"))
+    .flatMap(section => Array.from(section.querySelectorAll(".question")));
+
+  data.answers.forEach((value, index) => {
+    if (value !== null && allQuestions[index]) {
+      const radio = allQuestions[index].querySelector(`input[value="${value}"]`);
+      if (radio) radio.checked = true;
+    }
+  });
+
+  currentSectionIndex = data.currentSection || 0;
+  showSection(currentSectionIndex);
 }
 
-function validateSection(sectionIndex) {
-  const section = document.querySelector(`.survey-section[data-section="${sectionIndex}"]`);
-  const inputs = section.querySelectorAll("input[type='radio']");
-  const names = [...new Set([...inputs].map((input) => input.name))];
+function showResults() {
+  document.getElementById("scoringReminder").classList.add("hidden");
+  document.getElementById("progress-container").classList.add("hidden");
+  const answers = getAnswers(); // flatten answers array
+  const sectionScores = calculateSectionScores(answers);
+  const sorted = Object.entries(sectionScores).sort((a, b) => b[1] - a[1]);
 
-  return names.every((name) =>
-    section.querySelector(`input[name="${name}"]:checked`)
-  );
-}
+  const resultDiv = document.createElement("div");
+  resultDiv.innerHTML = `<h2>Section Scores:</h2>`;
 
-function handleSubmit() {
-  if (!validateSection(currentSection)) {
-    alert("Please answer all questions in this section before submitting.");
-    return;
-  }
-
-  localStorage.removeItem("surveyProgress");
-
-  let globalIndex = 0;
-  let scores = [];
-  const resultEl = document.getElementById("result");
-  resultEl.innerHTML = "";
-
-  sections.forEach((section) => {
-    let sectionScore = 0;
+  sorted.forEach(([name, score]) => {
     let index = 0;
-    section.questions.forEach(() => {
-      const selected = document.querySelector(`input[name="q${globalIndex}"]:checked`);
-      const value = parseInt(selected.value, 10);
-      if (value > 2) sectionScore += value;
-      globalIndex++;
-      index++;
+    resultDiv.className = "score-item";
+    resultDiv.innerHTML += `<p><strong>${name}</strong>: ${score}</p>`;
+    resultDiv.style.animationDelay = `${index * 0.2}s`;
+    index++;
+  });
+
+  // Delay temperament reveal
+  setTimeout(() => {
+    const temperament = getTemperamentBlend(sorted);
+    const temperamentSummary = temperamentSummaries[temperament];
+    const summary = document.createElement("p");
+    summary.className = "temperament-summary";
+    summary.textContent = temperamentSummary;
+
+    const tempDiv = document.createElement("div");
+    tempDiv.className = "temperament-title";
+    tempDiv.innerHTML = `<h3>Your Temperament Blend: ${temperament}</h3>`;
+    tempDiv.appendChild(summary);
+    const getProfileBtn = document.createElement("button");
+    getProfileBtn.textContent = "Get Detailed Profile";
+    getProfileBtn.addEventListener("click", () => {
+      // Show loading spinner
+      getProfileBtn.innerHTML = `<div class="spinner"></div> Loading...`;
+      getProfileBtn.disabled = true; // Disable the button so user can't click again
+
+      setTimeout(() => {
+        // After short delay, show the description paragraphs
+        showTemperamentProfile(temperament, sorted);
+        getProfileBtn.remove(); // Remove the button after loading done
+      }, 1000); // 1 second delay
     });
-    scores.push({ index: index, type: section.type, score: sectionScore });
-  });
+    tempDiv.appendChild(getProfileBtn);
+    resultDiv.appendChild(tempDiv);
+  }, 1000);
 
-  // Sort sections from highest to lowest score
-  scores.sort((a, b) => b.score - a.score);
+  document.getElementById("surveyContainer").innerHTML = ""; // clear old content
+  document.getElementById("surveyContainer").appendChild(resultDiv);
 
-  // // Display sorted section scores
-  scores.forEach(({ index, type, score }) => {
-    const div = document.createElement("div");
-    div.className = "score-item";
-    div.innerHTML = `${type}: ${score}`;
-    div.style.animationDelay = `${index * 0.2}s`; // Cascade the scores too
-    resultEl.appendChild(div);
+  localStorage.removeItem("surveyProgress"); // Clear saved data
+}
+
+function getAnswers() {
+  const allQuestions = document.querySelectorAll(".question");
+  return Array.from(allQuestions).map(q => {
+    const selected = q.querySelector("input[type='radio']:checked");
+    return selected ? parseInt(selected.value) : null;
   });
-  
-  // Calculate final temperament based on top two
-  const top = scores[0].type.toLowerCase();
-  const second = scores[1].type.toLowerCase();
-  let temperament = "";
+}
+
+function calculateSectionScores(answers) {
+  const sectionScores = {};
+  let qIndex = 0;
+
+  temperamentSections.forEach((section) => {
+    let total = 0;
+    section.questions.forEach(() => {
+      const score = answers[qIndex++];
+      if (score >= 3) total += score;
+    });
+    sectionScores[section.type] = total;
+  });
+  return sectionScores; 
+}
+
+function getTemperamentBlend(sorted) {
+  const top = sorted[0][0].toLowerCase();
+  const second = sorted[1][0].toLowerCase();
+  let temperament;
 
   const combinations = {
     "sanguine_choleric": "SanChlor",
@@ -335,130 +421,124 @@ function handleSubmit() {
   };
 
   const key = `${top}_${second}`;
-  temperament = combinations[key] || "Unknown Combination";
-
-  // Capitalizing first letter of temperaments
-  const topCap = top.charAt(0).toUpperCase() + top.slice(1);
-  const secondCap = second.charAt(0).toUpperCase() + second.slice(1);
-  
-
-  setTimeout(() => {
-    const temperamentEl = document.createElement("h2");
-    temperamentEl.className = "temperament-title";
-    temperamentEl.innerHTML = `Your temperament blend is: <strong>${temperament}</strong> (${topCap}/${secondCap})`;
-    resultEl.appendChild(temperamentEl);
-
-    // Create the 'Get Profile' button
-    const getProfileButton = document.createElement("button");
-    getProfileButton.textContent = "Get Profile";
-    getProfileButton.className = "get-profile-btn"; // for styling
-    resultEl.appendChild(getProfileButton);
-
-    // When the button is clicked, show the detailed paragraphs
-    getProfileButton.addEventListener("click", () => {
-      // Show loading spinner
-      getProfileButton.innerHTML = `<div class="spinner"></div> Loading...`;
-      getProfileButton.disabled = true; // Disable the button so user can't click again
-    
-      setTimeout(() => {
-        // After short delay, show the description paragraphs
-        showTemperamentDescription(temperament);
-        getProfileButton.remove(); // Remove the button after loading done
-      }, 1000); // 1 second delay
-    });
-
-  }, 1000); // <-- 1 second delay after scores finish animating
-  
-
-  function showTemperamentDescription(temperament) {
-    const descriptionParagraphs = temperamentDescriptions[temperament];
-
-    if (descriptionParagraphs && descriptionParagraphs.length > 0) {
-      const numberOfScores = scores.length || 4; // Normally 4 sections
-      descriptionParagraphs.forEach((text, index) => {
-        const p = document.createElement("p");
-        p.className = "description-paragraph";
-        p.textContent = text;
-        p.style.animationDelay = `${(numberOfScores * 0.2) + (index * 0.2)}s`;
-        resultEl.appendChild(p);
-      });
-    } 
-
-    const downloadBtn = document.createElement("button");
-    downloadBtn.textContent = "Download PDF";
-    downloadBtn.className = "download-pdf-btn";
-    resultEl.appendChild(downloadBtn);
-
-    downloadBtn.addEventListener("click", generatePDF);
-  } 
-
-  // Hide the form and progress bar
-  document.getElementById("survey-form").classList.add("hidden");
-  document.getElementById("progress-container").classList.add("hidden");
-  resultEl.scrollIntoView({ behavior: "smooth" });
+  return temperament = combinations[key] || "Unknown Combination";
 }
 
-document.getElementById("start-btn").addEventListener("click", () => {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("survey-form").classList.remove("hidden");
-  buildSurvey();
-});
+function showTemperamentProfile(temperament, sorted) {
+  const descriptionParagraphs = temperamentDescriptions[temperament];
 
-async function generatePDF() {
+  // Description paragraphs
+  if (descriptionParagraphs && descriptionParagraphs.length > 0) {
+    const numberOfScores = temperament.length || 4; // Normally 4 sections
+    descriptionParagraphs.forEach((text, index) => {
+      const p = document.createElement("p");
+      p.className = "description-paragraph";
+      p.textContent = text;
+      p.style.animationDelay = `${(numberOfScores * 0.2) + (index * 0.2)}s`;
+      profileDiv.appendChild(p);
+    });
+  } 
+
+  const container = document.getElementById("surveyContainer");
+  container.innerHTML = `<h2>${temperament} Profile</h2>`;
+
+  const pdfBtn = document.createElement("button");
+  pdfBtn.textContent = "Download PDF";
+  pdfBtn.addEventListener("click", () => generatePDF(temperament, descriptionParagraphs, sorted));
+  profileDiv.appendChild(pdfBtn);
+}
+
+async function generatePDF(temperament, descriptionParagraphs, sorted) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  const today = new Date();
-  const dateString = today.toLocaleDateString();
+  const todaysDate = new Date().toLocaleDateString();
+  const top = sorted[0][0];
+  const second = sorted[1][0];
 
-  // Title & Date
+  // Title and Date
   doc.setFontSize(18);
   doc.text("Temperament Survey Results", 20, 20);
   doc.setFontSize(14);
-  doc.text(`Date Taken: ${dateString}`, 130, 20);
+  doc.text(`Date Taken: ${todaysDate}`, 130, 20);
+  doc.setFontSize(14);
+  doc.setFont(undefined, 'bold');
+  doc.text(`Your temperament blend is ${temperament}(${top}/${second})`, 20, 30);
 
-  // Get Temperament
-  const temperamentTitle = document.querySelector(".temperament-title");
-  if (temperamentTitle) {
-    doc.setFontSize(16);
-    doc.text(`${temperamentTitle.textContent}`, 20, 30);
-  }
-
-  // Get Section Scores (if visible on page)
-  const scoreItems = document.querySelectorAll(".score-item");
+  // Section Scores
+  let x = 20;
   let y = 40;
-  if (scoreItems.length > 0) {
+  if (sorted.length > 0) {
     doc.setFontSize(12);
-    doc.text("Section Scores:", 20, y);
+    doc.text("Section Scores:", x, y);
+    doc.setFont(undefined, "normal");
     y += 7;
-    scoreItems.forEach((item) => {
-      doc.text(`• ${item.textContent}`, 25, y);
-      y += 7;
+    sorted.forEach((item) => {
+      doc.text(`• ${item[0]}: ${item[1]}`, x, y);
+      x += (item[0] + item[1]).length + 22;
     });
-    y += 5;
+    y += 10;
   }
 
-  // Get Description Paragraphs
-  const paragraphs = document.querySelectorAll(".description-paragraph");
-  if (paragraphs.length > 0) {
-    doc.setFontSize(12);
-    doc.text("Temperament Profile:", 20, y);
-    y += 10;
+  // Temperament Summary
+  doc.setFont(undefined, "bold");
+  doc.text("Summary:", 20, y);
+  doc.setFont(undefined, "normal");
+  const summary = temperamentSummaries[temperament];
+  
+  if(summary.length > 0) {
+    y += 8;
+    
+    const lines = doc.splitTextToSize(summary[0].trim(), 170);
+    doc.text(lines, 20, y);
+  }
 
-    paragraphs.forEach((p) => {
-      const lines = doc.splitTextToSize(p.textContent.trim(), 170);
+  // Description Paragraphs
+  y += 30;
+  doc.setFont(undefined, "bold"); 
+  doc.text("Detailed Profile:", 20, y);
+  doc.setFont(undefined, "normal"); 
+
+  if (descriptionParagraphs.length > 0) {
+    
+    y += 8;
+    
+    descriptionParagraphs.forEach((p) => {
+      const lines = doc.splitTextToSize(p.trim(), 170);
       if (y + lines.length * 7 > 280) {
         doc.addPage();
         y = 20;
       }
       doc.text(lines, 20, y);
-      y += lines.length * 5 + 8;
+      y += lines.length * 5 + 5;
     });
   } else {
     doc.text("Profile details not available yet.", 20, y);
   }
 
   // Save PDF
-  const fileName = `temperament_results_${dateString.replace(/\//g, "-")}.pdf`;
+  const fileName = `temperament_results_${todaysDate.replace(/\//g, "-")}.pdf`;
   doc.save(fileName);
 }
+
+// Handle Start/Resume
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("surveyProgress");
+  if (saved) {
+    document.getElementById("resume-survey-btn").style.display = "inline-block";
+  }
+
+  document.getElementById("start-survey-btn").addEventListener("click", () => {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("surveyContainer").classList.remove("hidden");
+    document.getElementById("scoringReminder").classList.remove("hidden");
+    document.getElementById("progress-container").classList.remove("hidden");
+    buildSurvey();
+  });
+
+  document.getElementById("resume-survey-btn").addEventListener("click", () => {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("surveyContainer").style.display = "block";
+    buildSurvey();
+  });
+});

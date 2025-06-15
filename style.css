@@ -35,12 +35,18 @@ h1 {
   margin-bottom: 15px;
 }
 
+.question.unanswered {
+  border-left: 4px solid red;
+  padding-left: 8px;
+  background-color: #ffe5e5;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
 }
 
-.survey-section {
+.survey-container {
   margin-bottom: 40px;
 }
 
@@ -75,7 +81,8 @@ button:hover {
   background-color: navy;
 }
 
-.save-progress-btn {
+.save-progress-btn,
+#resume-survey-btn {
   margin: 1.5em 0;
   padding: 0.6em 1.2em;
   background-color: #28a745;
@@ -87,7 +94,8 @@ button:hover {
   transition: background-color 0.3s ease;
 }
 
-.save-progress-btn:hover {
+.save-progress-btn:hover,
+#resume-survey-btn:hover {
   background-color: #218838;
 }
 
@@ -164,6 +172,11 @@ button:hover {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s forwards;
+}
+
+.temperament-summary {
+  font-size: 1.2rem;
+  font-weight: 100;
 }
 
 /* Fade-in animation */
