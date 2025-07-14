@@ -1,6 +1,7 @@
 let currentSectionIndex = 0;
 let temperamentDescriptions = {};
 let temperamentSummaries = {};
+let surveyMode;
 const profileDiv = document.getElementById("profile");
 
 fetch('temperamentDescriptions.json')
@@ -27,31 +28,31 @@ const temperamentSections = [
       "Interrupts others",
       "Compassionate",
       "Impulsive",
-      // "Disorganized",
-      // "Impractical",
-      // "Funny",      
-      // "Forgetful",
-      // "Easily discouraged",
-      // "Very positive",
-      // "Easily angered",
-      // "Undisciplined",
-      // "Extrovert",
-      // "Refreshing",
-      // "Lively/spirited",
-      // "Weak-willed",
-      // "Spontaneuous",
-      // "Talkative",
-      // "Delightful/cheerful",
-      // "Enjoyable",
-      // "Popular",
-      // "Friendly/Sociable",
-      // "\"Bouncy\"",
-      // "Restless",
-      // "Difficulty concentrating",
-      // "Likes to play",
-      // "Difficulty keeping resolutions",
-      // "Lives in present",
-      // "Difficulty with appointments"
+      "Disorganized",
+      "Impractical",
+      "Funny",      
+      "Forgetful",
+      "Easily discouraged",
+      "Very positive",
+      "Easily angered",
+      "Undisciplined",
+      "Extrovert",
+      "Refreshing",
+      "Lively/spirited",
+      "Weak-willed",
+      "Spontaneuous",
+      "Talkative",
+      "Delightful/cheerful",
+      "Enjoyable",
+      "Popular",
+      "Friendly/Sociable",
+      "\"Bouncy\"",
+      "Restless",
+      "Difficulty concentrating",
+      "Likes to play",
+      "Difficulty keeping resolutions",
+      "Lives in present",
+      "Difficulty with appointments"
     ]
   },
   {
@@ -63,31 +64,31 @@ const temperamentSections = [
       "Bossy",
       "Goal-oriented",
       "Decisive",
-      // "Frank",
-      // "Self-confident",
-      // "Sarcastic",
-      // "Workaholic",
-      // "Self-sufficient",
-      // "Practical",
-      // "Headstrong",
-      // "Activist",
-      // "Outgoing",
-      // "Domineering",
-      // "Adventurous",
-      // "Aggressive",
-      // "Competitive",
-      // "Leadership ability",
-      // "Daring",
-      // "Persevering",
-      // "Bold",
-      // "Strong-willed",
-      // "Persuasive",
-      // "Hot-tempered",
-      // "Resourceful",
-      // "Insensitive",
-      // "Outspoken",
-      // "Unsympathetic",
-      // "Productive"
+      "Frank",
+      "Self-confident",
+      "Sarcastic",
+      "Workaholic",
+      "Self-sufficient",
+      "Practical",
+      "Headstrong",
+      "Activist",
+      "Outgoing",
+      "Domineering",
+      "Adventurous",
+      "Aggressive",
+      "Competitive",
+      "Leadership ability",
+      "Daring",
+      "Persevering",
+      "Bold",
+      "Strong-willed",
+      "Persuasive",
+      "Hot-tempered",
+      "Resourceful",
+      "Insensitive",
+      "Outspoken",
+      "Unsympathetic",
+      "Productive"
     ]
   },
   {
@@ -99,31 +100,31 @@ const temperamentSections = [
       "Insecure",
       "Sensitive",
       "Indecisive",
-      // "Hard to please",
-      // "Self-centered",
-      // "Pessimistic",
-      // "Depressed easily",
-      // "Easily offended",
-      // "Idealistic",
-      // "Loner",
-      // "Self-sacrificing",
-      // "Introvert",
-      // "Faithful friend",
-      // "Analytical",
-      // "Considerate",
-      // "Likes behind the scenes",
-      // "Suspicious",
-      // "Respectful",
-      // "Introspective",
-      // "Planner",
-      // "Perfectionist",
-      // "Scheduled",
-      // "Unforgiving/resents",
-      // "Orderly",
-      // "Creative",
-      // "Detailed",
-      // "Moody",
-      // "Gifted(musically or athletically)"
+      "Hard to please",
+      "Self-centered",
+      "Pessimistic",
+      "Depressed easily",
+      "Easily offended",
+      "Idealistic",
+      "Loner",
+      "Self-sacrificing",
+      "Introvert",
+      "Faithful friend",
+      "Analytical",
+      "Considerate",
+      "Likes behind the scenes",
+      "Suspicious",
+      "Respectful",
+      "Introspective",
+      "Planner",
+      "Perfectionist",
+      "Scheduled",
+      "Unforgiving/resents",
+      "Orderly",
+      "Creative",
+      "Detailed",
+      "Moody",
+      "Gifted(musically or athletically)"
     ]
   },
   {
@@ -135,31 +136,31 @@ const temperamentSections = [
       "Unenthusiastic",
       "Negative",
       "Regular daily habits",
-      // "Hesitant",
-      // "Shy",
-      // "Stingy",
-      // "Aimless",
-      // "Not aggressive",
-      // "Stubborn",
-      // "Worrier",
-      // "Spectator of life",
-      // "Works well under pressure",
-      // "Indecisive",
-      // "Adaptable",
-      // "Slow and lazy",
-      // "Submissive to others",
-      // "Easy going",
-      // "Reserved",
-      // "Calm and cool",
-      // "Content/satisfied",
-      // "Efficient",
-      // "Patient",
-      // "Dependable",
-      // "Listener",
-      // "Witty/dry humor",
-      // "Pleasant",
-      // "Teases others",
-      // "Consistent"
+      "Hesitant",
+      "Shy",
+      "Stingy",
+      "Aimless",
+      "Not aggressive",
+      "Stubborn",
+      "Worrier",
+      "Spectator of life",
+      "Works well under pressure",
+      "Indecisive",
+      "Adaptable",
+      "Slow and lazy",
+      "Submissive to others",
+      "Easy going",
+      "Reserved",
+      "Calm and cool",
+      "Content/satisfied",
+      "Efficient",
+      "Patient",
+      "Dependable",
+      "Listener",
+      "Witty/dry humor",
+      "Pleasant",
+      "Teases others",
+      "Consistent"
     ]
   }
 ];
@@ -169,7 +170,19 @@ function buildSurvey() {
   container.innerHTML = ""; // Clear
   updateProgressBar(currentSectionIndex);
 
-  temperamentSections.forEach((section, sIndex) => {
+  // Determine how many questions to load per section
+  const questionsPerSection = surveyMode === "quick" ? 10 : 30;
+  // Create a deep copy of sections with only desired number of questions
+  const selectedSections = temperamentSections.map(section => ({
+    type: section.type,
+    title: section.title,
+    questions: section.questions.slice(0, questionsPerSection)
+  }));
+
+  // Store selectedSections
+  currentSurveySections = selectedSections;
+
+  selectedSections.forEach((section, sIndex) => {
     const sectionDiv = document.createElement("div");
     sectionDiv.className = "section";
     if (sIndex !== 0) sectionDiv.style.display = "none";
@@ -189,6 +202,7 @@ function buildSurvey() {
       }
       sectionDiv.appendChild(qDiv);
     });
+  
 
     // Add Save Progress button (not on last section)
     if (sIndex !== temperamentSections.length - 1) {
@@ -267,12 +281,6 @@ function buildSurvey() {
 
     container.appendChild(sectionDiv);
   });
-
-  // Resume if saved progress exists
-  const saved = localStorage.getItem("surveyProgress");
-  if (saved) {
-    loadProgress(JSON.parse(saved));
-  }
 }
 
 function showSection(index) {
@@ -294,35 +302,59 @@ function updateProgressBar(currentSectionIndex) {
 }
 
 function saveProgress() {
-  const allQuestions = Array.from(document.querySelectorAll(".section"))
-    .flatMap(section => Array.from(section.querySelectorAll(".question")));
+  const answers = getAnswers();
 
-  const answers = allQuestions.map(q => {
-    const selected = q.querySelector("input[type='radio']:checked");
-    return selected ? selected.value : null;
-  });
-
-  localStorage.setItem("surveyProgress", JSON.stringify({
-    answers,
+  const progressData = {
+    answers: answers,
     currentSection: currentSectionIndex,
-    timestamp: new Date().toISOString()
-  }));
+    surveyMode: surveyMode
+  };
+
+  localStorage.setItem("surveyProgress", JSON.stringify(progressData));
 }
 
-function loadProgress(data) {
+function loadProgress() {
+  const saved = localStorage.getItem("surveyProgress");
+  if (!saved) {
+    alert("No saved progress found.");
+    return;
+  }
+
+  const progress = JSON.parse(saved);
+  console.log(progress);
+
+  // Set surveyMode BEFORE calling buildSurvey
+  if (progress.surveyMode) {
+    surveyMode = progress.surveyMode;
+  } else {
+    surveyMode = 'quick'; // fallback default if older save
+  }
+
+  // Now rebuild the correct survey mode
+  buildSurvey();
   const allQuestions = Array.from(document.querySelectorAll(".section"))
     .flatMap(section => Array.from(section.querySelectorAll(".question")));
+  
+    console.log(allQuestions);
 
-  data.answers.forEach((value, index) => {
+  progress.answers.forEach((value, index) => {
     if (value !== null && allQuestions[index]) {
       const radio = allQuestions[index].querySelector(`input[value="${value}"]`);
       if (radio) radio.checked = true;
     }
-  });
+  }); 
 
-  currentSectionIndex = data.currentSection || 0;
-  showSection(currentSectionIndex);
+  updateProgressBar(progress.currentSection);
+  console.log(progress.currentSection);
+
+  // Wait a bit for DOM to build, then restore answers
+  setTimeout(() => {
+    currentSectionIndex = progress.currentSection || 0;
+    showSection(currentSectionIndex);
+    
+  }, 100); // small delay to ensure the DOM is ready
 }
+
 
 function showResults() {
   document.getElementById("scoringReminder").classList.add("hidden");
@@ -388,14 +420,20 @@ function getAnswers() {
 function calculateSectionScores(answers) {
   const sectionScores = {};
   let qIndex = 0;
+  console.log(temperamentSections);
 
   temperamentSections.forEach((section) => {
     let total = 0;
-    section.questions.forEach(() => {
+    
+    for (const question of section.questions) {
       const score = answers[qIndex++];
       if (score >= 3) total += score;
-    });
+      if (surveyMode === "quick" && qIndex % 10 === 0) {
+        break;
+      }
+    }
     sectionScores[section.type] = total;
+    console.log(sectionScores);
   });
   return sectionScores; 
 }
@@ -528,17 +566,29 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("resume-survey-btn").style.display = "inline-block";
   }
 
-  document.getElementById("start-survey-btn").addEventListener("click", () => {
+  document.getElementById("start-quick-btn").addEventListener("click", () => {
     document.getElementById("intro").style.display = "none";
     document.getElementById("surveyContainer").classList.remove("hidden");
     document.getElementById("scoringReminder").classList.remove("hidden");
     document.getElementById("progress-container").classList.remove("hidden");
+    surveyMode = "quick";
+    buildSurvey();
+  });
+
+  document.getElementById("start-full-btn").addEventListener("click", () => {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("surveyContainer").classList.remove("hidden");
+    document.getElementById("scoringReminder").classList.remove("hidden");
+    document.getElementById("progress-container").classList.remove("hidden");
+    surveyMode = "full";
     buildSurvey();
   });
 
   document.getElementById("resume-survey-btn").addEventListener("click", () => {
     document.getElementById("intro").style.display = "none";
     document.getElementById("surveyContainer").style.display = "block";
-    buildSurvey();
+    document.getElementById("scoringReminder").classList.remove("hidden");
+    document.getElementById("progress-container").classList.remove("hidden");
+    loadProgress();
   });
 });

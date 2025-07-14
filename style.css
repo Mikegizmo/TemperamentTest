@@ -9,7 +9,7 @@ body {
   max-width: 600px;
   margin: auto;
   background: #fff;
-  padding: 20px 30px;
+  /* padding: 20px 30px; */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -23,12 +23,12 @@ h1 {
   text-align: center;
 }
 
-.intro ul {
+ul {
   display: inline-block;
   list-style-type: none;
   text-align: left;
-  margin: 10px auto;
-  max-width: 400px;
+  padding: 0;
+  margin: auto;
 }
 
 .question {
