@@ -19,17 +19,18 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #2c3e50;
+  background-color: blue;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 8px;
 }
 
 .navbar .brand {
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
@@ -51,41 +52,111 @@ body {
   opacity: 0.8;
 }
 
+/* Animated underline for nav links */
+.nav-links li a {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background-color: orange;
+  transition: width 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: orange;
+}
+
+.nav-links li a:hover::after {
+  width: 100%;
+}
+
+/* Active link styling with animation */
+.nav-links li a.active-link {
+  color: orange;
+}
+
+.nav-links li a.active-link::after {
+  width: 100%;
+}
+
+/* Hamburger icon (3 lines) */
 .hamburger {
   display: none;
-  font-size: 1.8rem;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
   background: none;
-  color: white;
   border: none;
   cursor: pointer;
+  padding: 0;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Animation: turn hamburger into X */
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 /* Mobile Styles */
 @media (max-width: 768px) {
   .hamburger {
-    display: block;
+    display: flex;
   }
 
   .nav-links {
-    display: none;
     flex-direction: column;
     background-color: #34495e;
     position: absolute;
     top: 60px;
     right: 0;
     width: 200px;
-    padding: 1rem;
     border-radius: 0 0 0 8px;
+    overflow: hidden;
+
+    /* Animation */
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
   }
 
   .nav-links.active {
-    display: flex;
+    max-height: 300px; /* enough to fit all links */
+    opacity: 1;
   }
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.25rem;
 }
 
 .intro {
@@ -98,6 +169,10 @@ ul {
   text-align: left;
   padding: 0;
   margin: auto;
+}
+
+li {
+  font-size: 1.25rem;
 }
 
 .question {
@@ -310,4 +385,48 @@ button:hover {
 
 .download-pdf-btn:hover {
   background-color: #0056b3;
+}
+
+/* Comments page styling */
+#comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+}
+#comment-text {
+  min-height: 80px;
+  resize: vertical;
+}
+.comment {
+  background: #f7f7f7;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+.comment .meta {
+  font-size: 0.85em;
+  color: #555;
+}
+.comment .delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+
+/* Fade-in animation for navbar */
+.navbar {
+  opacity: 0;
+  transform: translateY(-15px);
+  animation: navbarFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes navbarFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comments</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="container">
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder"></div>
+
+  <div id="comments-page" class="page">
+    <h2>Comments About the Survey</h2>
+
+    <h3>Comments section coming soon!</h3>
+    
+    <div class="comment-guidelines" style="display: none;">
+      <ul>
+        <h3>Comment Guidelines:</h3>
+        <li>No offensive language or personal attacks</li>
+        <li>No sharing personal information</li>
+        <li>Stay on topic</li>
+      </ul>
+    </div>
+    
+    <form id="comment-form" style="display: none;">
+      <input type="text" id="comment-author" placeholder="Your name (optional)">
+      <textarea id="comment-text" placeholder="Write your comment..." required></textarea>
+      <button type="submit">Post Comment</button>
+    </form>
+    
+    <div id="comments-list"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="navbar.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
